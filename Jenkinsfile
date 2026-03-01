@@ -10,7 +10,6 @@ pipeline {
 
     stage('Test') {
       steps {
-        // Windows Jenkins => use bat
         bat 'mvn -B clean test'
       }
     }
@@ -19,6 +18,13 @@ pipeline {
       steps {
         bat 'mvn -B clean package'
         archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+      }
+    }
+
+    stage('Docker Build') {
+      steps {
+        bat 'docker version'
+        bat 'docker build -t grocery-app:%BUILD_NUMBER% .'
       }
     }
   }
